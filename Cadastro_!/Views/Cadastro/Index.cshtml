@@ -1,0 +1,185 @@
+﻿@model IEnumerable<Cadastro__.Models.clienteModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de Clientes</h1>
+
+<a class="btn btn-dark my-2" asp-action="Create">Cadastrar</a>
+
+<!--BOTÕES DE APLICAR FILTRO E LIMPAR FILTRO COM SUAS FUNÇÕES ASSOCIADAS NO ID-->
+<button id="toggleFilters" class="btn btn-primary my-3">Filtros</button>
+<button id="clearFilters" class="btn btn-secondary my-3">Limpar Filtros</button>
+<!---->
+
+<!-- FILTROS -->
+<div id="filterContainer" class=" flex-column align-items-start my-2 rounded border border-dark p-3" style="display: none;">
+
+    <h2>Filtros</h2>
+
+    <div class="form-group my-2 w-50">
+        <input class="form-control" type="text" id="searchName" placeholder="Pesquisar Nome/Razão Social">
+    </div>
+    <div class="form-group my-2 w-50">
+        <input class="form-control" type="text" id="searchEmail" placeholder="E-mail do Cliente">
+    </div>
+    <div class="form-group my-2 w-50">
+        <input class="form-control" type="text" id="searchPhone" placeholder="Telefone do Cliente">
+    </div>
+
+    <div class="form-group my-2 w-50" >
+        <input class="form-control" type="date" id="campoTrue">
+    </div>
+
+    <div class="form-group my-2 w-50" style="display:none">
+        <input class="form-control campotruedatrue" type="text" id="searchDate">
+    </div>
+
+    <div class="form-group my-2 w-50">
+        <label class="form-checkbox">
+            <input class="form-check-input" type="checkbox" id="searchStatus" />
+            @Html.DisplayNameFor(model => model.cadStatus)
+        </label>
+    </div>
+
+    <button id="applyFilters" class="btn btn-primary my-3">Aplicar</button>
+</div>
+<!---->
+
+<table id="myTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cadData)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cadStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cadData)
+            </td>
+                <td>
+                    @if (item.cadStatus)
+                    {
+                        <span>Bloqueado</span>
+                    }
+                    else
+                    {
+                        <span>Ativo</span>
+                    }
+                </td>
+            <td>
+               <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <a class="btn btn-primary active" asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                  <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.id">Details</a>
+                  <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a>
+               </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var dataTable = $('#myTable').DataTable({
+            searching: true,
+            pageLength: 20,
+            lengthChange: false,
+        });
+        $('.dataTables_filter').hide();
+        // Aplicar
+        $('#applyFilters').on('click', function () {
+            var nameFilter = $('#searchName').val();
+            var emailFilter = $('#searchEmail').val();
+            var phoneFilter = $('#searchPhone').val();
+            var dateFilter = $('#searchDate').val();
+            var statusFilter = $('#searchStatus').is(':checked') ? 'Bloqueado' : '';
+
+            // Aplicar os filtros ao DataTable
+            dataTable
+                .column(0)
+                .search(nameFilter)
+                .column(1)
+                .search(emailFilter)
+                .column(2)
+                .search(phoneFilter)
+                .column(3)
+                .search(dateFilter)
+                .column(4)
+                .search(statusFilter)
+                .draw();
+        });
+
+        //Limpar filtros
+        $('#clearFilters').on('click', function () {
+            $('#searchName').val('');
+            $('#searchEmail').val('');
+            $('#searchPhone').val('');
+            $('#campoTrue').val('');
+            $('#searchDate').val('');
+            $('#searchStatus').prop('checked', false);
+
+            // Refaz a tabela com os dados tudo
+            dataTable.search('').columns().search('').draw();
+        });
+    });
+
+    //Toggle do filtro simplizinho pra restaurar minha sanidade
+    $(document).ready(function () {
+        $('#toggleFilters').on('click', function () {
+            $('#filterContainer').toggle();
+        });
+
+        $('#applyFilters').on('click', function () {
+
+            $('#filterContainer').hide();
+        });
+    });
+
+    //Eu sei que isso é uma vigarice tremenda mas basicamente lá em cima criei dois inputs, um com o campo de search real e outro não, o campo de search falso recebe o datepicker
+    //depois eu faço o tratamento aqui para passar para o verdadeiro
+    $(document).ready(function () {
+        $('#campoTrue').on('input', function () {
+            var campoTrueValue = $(this).val();
+            var formattedValue = formatarData(campoTrueValue);
+            $('.campotruedatrue').val(formattedValue);
+        });
+    });
+
+    function formatarData(data) {
+        var parts = data.split('-');
+        var dia = parts[2];
+        var mes = parts[1];
+        var ano = parts[0];
+        return dia + '/' + mes + '/' + ano;
+    }
+</script>

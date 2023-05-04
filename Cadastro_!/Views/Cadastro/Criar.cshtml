@@ -1,0 +1,160 @@
+﻿@model clienteModel;
+
+@{
+    ViewData["Title"] = "Cadastro";
+}
+
+<head>
+
+</head>
+
+<body>
+    <div class="text-center">
+
+        <h1 class="display-4">Cadastro de Clientes</h1>
+
+    </div>
+    <div class="container rounded">
+        <form asp-controller="context" asp-action="Create" method="post">
+            <!-- Dados Base-->
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- Name -->
+                <div class="form-group my-2">
+                    <label for="nome">Nome</label>
+                    <input type="text" asp-for="name" class="form-control" placeholder="Razão Social do Cliente" required>
+                </div>
+                <!-- -->
+
+                <!-- E-mail -->
+                <div class="form-group my-2">
+                    <label for="e-mail">E-mail</label>
+                    <input type="email" asp-for="email" class="form-control" placeholder="E-mail do Cliente" required>
+                </div>
+                <!-- -->
+
+                <!-- Telefone -->
+                <div class="form-group my-2">
+                    <label for="Telefone">Telefone</label>
+                    <input type="text" asp-for="telefone" class="form-control" placeholder="Telefone do Cliente" required>
+                </div>
+                <!-- -->
+
+                <!-- Data de Cadastro -->
+                <div class="form-group my-2">
+                    <label for="Data">Data de Cadastro</label>
+                    <input type="text" asp-for="cadData" class="form-control" placeholder="Data de Cadastro do Cliente" required>
+                </div>
+                <!-- -->
+            </div>
+            <!-- -->
+            <!-- Dados Base-->
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- Tipo de Pessoa -->
+                <div class="form-group my-2">
+                    <label asp-for="tipoPessoa" for="tipoPessoa">Tipo de Pessoa:</label>
+                    <select asp-for="tipoPessoa" for="tipoPessoa" class="form-group" id="tipoPessoa" asp-for="tipoPessoa" name="tipoPessoa" onchange="mostrarCampoIsento(); mostrarCampoPessoal();">
+                        <option value="fisica">Pessoa Física</option>
+                        <option value="juridica">Pessoa Jurídica</option>
+                    </select>
+                </div>
+                <!--  -->
+
+                <!-- CPF/CNPJ -->
+                <div class="form-group my-2">
+                    <label for="CPF/CNPJ">CPF/CNPJ</label>
+                    <input type="text" class="form-control" asp-for="cpfcnpj" placeholder="CPF/CNPJ do Cliente" maxlength="12">
+                </div>
+                <!--  -->
+
+                <!-- Inscrição Estadual-->
+                <div class="form-group my-2">
+                    <label for="inscricaoEstadual">Inscrição Estadual:</label>
+                    <input type="text" asp-for="inscEstadual" id="inscricaoEstadual" class="form-control" name="inscricaoEstadual" maxlength="15" pattern="\d{3}\.\d{3}\.\d{3}-\d{3}" placeholder="Digite a Inscrição Estadual do CLiente" />
+                </div>
+
+                <div class="form-group my-2" id="campoIsento" style="display: none;">
+                    <label for="isento">Isento:</label>
+                    <input type="checkbox" id="isento" name="isento" value="true" />
+                </div>
+                <!--  -->
+                <!-- Status-->
+                <div class="form-group my-2"  id="campoDados" style="display: none;">
+                    <label for="Bloqueado">Bloqueado:</label>
+                    <input type="checkbox" asp-for="cadStatus" id="Bloqueado" name="Bloqueado" value="true" />
+                </div>
+                <!-- -->
+                <!-- Genero-->
+                <div class="form-group my-2" id="campoDados" style="display: none;">
+                    <label for="Genero">Gênero:</label>
+                    <select class="form-group" asp-for="genero" id="Genero" name="Genero">
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <!-- -->
+                <!-- Data de Nascimento-->
+                <div id="campoDados"  class="form-group my-2" style="display: none;">
+                    <label for="Data">Data de Nascimento</label>
+                    <input type="date" asp-for="password" class="form-control" placeholder="Data de Nascimento do Cliente">
+                </div>
+                <!-- -->
+            </div>
+            <!-- Area de Acesso-->
+            <div class="container rounded border border-info my-3 p-3">
+                <div class="form-group my-2">
+                    <label for="senha">Senha de Acesso:</label>
+                    <input class="form-control" type="password" id="senha" name="senha" minlength="8" maxlength="15" />
+
+                    <label for="confirmaSenha">Confirmação de Senha:</label>
+                    <input class="form-control" type="password" id="confirmaSenha" name="confirmaSenha" minlength="8" maxlength="15" />
+
+                    <span id="senhaMsg" style="color: red; display: none;">As senhas não conferem.</span>
+                </div>
+            </div>
+            <!-- -->
+            <button type="submit" class="btn btn-primary"> Adicionar </button>
+            <a class="btn btn-secondary btn-block" asp-action="Index" role="button"> Voltar </a>
+        </form>
+    </div>
+    <script>
+        // Toggle Isento
+        function mostrarCampoIsento() {
+            var tipoPessoa = document.getElementById("tipoPessoa").value;
+            var campoIsento = document.getElementById("campoIsento");
+            var campoDados = document.getElementById("campoDados");
+            if (tipoPessoa === "juridica") {
+                campoIsento.style.display = "block";
+            } else {
+                campoIsento.style.display = "none";
+            }
+        }
+
+        // Toggle Dados
+        function mostrarCampoPessoal() {
+            var tipoPessoa = document.getElementById("tipoPessoa").value;
+            var campoDados = document.querySelectorAll("#campoDados");
+
+            campoDados.forEach(function (campo) {
+                if (tipoPessoa === "fisica") {
+                    campo.style.display = "block";
+                } else {
+                    campo.style.display = "none";
+                }
+            });
+        }
+
+        // Confirmação Senha
+        var senha = document.getElementById("senha");
+        var confirmaSenha = document.getElementById("confirmaSenha");
+        var senhaMsg = document.getElementById("senhaMsg");
+
+        confirmaSenha.addEventListener("input", function () {
+            if (confirmaSenha.value !== senha.value) {
+                senhaMsg.style.display = "block";
+            } else {
+                senhaMsg.style.display = "none";
+            }
+        });
+    </script>
+</body>

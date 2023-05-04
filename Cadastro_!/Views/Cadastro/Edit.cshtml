@@ -1,0 +1,266 @@
+﻿@model Cadastro__.Models.clienteModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- NOME -->
+                <div class="form-group my-2">
+                    <label asp-for="name" class="control-label"></label>
+                    <input asp-for="name" class="form-control" data-toggle="tooltip" required title="Nome completo ou Razão Social do Cliente" placeholder="Razão Social do Cliente" />
+                    <span asp-validation-for="name" class="text-danger"></span>
+                </div>
+                <!---->
+                <!-- STATUS DO CADASTRO -->
+                <div class="form-group form-check">
+                    <label class="form-checkbox">
+                        <input class="form-check-input" asp-for="cadStatus" type="checkbox" />
+                        @Html.DisplayNameFor(model => model.cadStatus)
+                    </label>
+                </div>
+                <!---->
+                <!-- EMAIL-->
+                <div class="form-group my-2">
+                    <label asp-for="email" class="control-label"></label>
+                    <input asp-for="email" class="form-control" data-toggle="tooltip" required title="E-mail do Cliente" placeholder="E-mail do Cliente" />
+                    <span asp-validation-for="email" class="text-danger"></span>
+                </div>
+                <!---->
+                <!-- TELEFONE -->
+                <div class="form-group my-2">
+                    <label asp-for="telefone" class="control-label"></label>
+                    <input asp-for="telefone" class="form-control" data-toggle="tooltip" required title="Telefone do Cliente" pattern="^\d{2}\.\d{3}\.\d{3}-\d{3}$" placeholder="Telefone do Cliente" />
+                    <span asp-validation-for="telefone" class="text-danger"></span>
+                </div>
+                <!---->
+                <!-- DATA DE CADASTRO -->
+                <div class="form-group my-2">
+                    <label asp-for="cadData" class="control-label"></label>
+                    <input asp-for="cadData" placeholder="Data de Cadastro do Cliente" class="form-control" id="cadDataInput" readonly />
+                    <span asp-validation-for="cadData" class="text-danger"></span>
+                </div>
+                <!---->
+            </div>
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- TIPO DE PESSOA -->
+                <div class="form-group my-2">
+                    <label asp-for="tipoPessoa" for="tipoPessoa">Tipo de Pessoa:</label>
+                    <select asp-for="tipoPessoa" class="form-control" id="tipoPessoa" data-toggle="tooltip" required title="Selecione o tipo de Pessoa" onchange="mostrarCampoIsento(); requiredCampoPessoal();">
+                        <option value="">------</option>
+                        <option value="F">Pessoa Física</option>
+                        <option value="J">Pessoa Jurídica</option>
+                    </select>
+                </div>
+                <div class="form-group form-check my-2" id="campoIE" style="display: none;">
+                    <input class="form-check-input" type="checkbox" id="campoIECheckbox" onchange="aplicarIsento();" />
+                    <label class="form-check-label" for="campoIE">Inscrição Estadual para Pessoa Física</label>
+                    <span class="text-danger"></span>
+                </div>
+                <!---->
+                <!-- CPF OU CNPJ -->
+                <div class="form-group my-2">
+                    <label asp-for="cpfcnpj" class="control-label"></label>
+                    <input asp-for="cpfcnpj" class="form-control" data-toggle="tooltip" required maxlength="20" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}|\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}" title="CPF ou CNPJ" placeholder="CPF/CNPJ do Cliente" />
+                    <span asp-validation-for="cpfcnpj" class="text-danger"></span>
+                </div>
+                <!---->
+                <!-- INSCRIÇÃO ESTADUAL -->
+                <div class="form-group my-2">
+                    <label asp-for="inscEstadual" class="control-label"></label>
+                    <input asp-for="inscEstadual" class="form-control" id="inscricaoEstadual" maxlength="20" pattern="\d{3}\.\d{3}\.\d{3}-\d{3}" placeholder="Digite a Inscrição Estadual do CLiente" />
+                    <span asp-validation-for="inscEstadual" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check my-2" id="campoIsento">
+                    <input class="form-check-input" type="checkbox" id="isentoCheckbox" onchange="aplicarIsento();" />
+                    <label class="form-check-label" for="isentoCheckbox">Isento</label>
+                    <span class="text-danger"></span>
+                </div>
+                <!---->
+            </div>
+            <div class="container rounded border border-info my-3 p-3" id="campoDados">
+                <!-- GENERO -->
+                <div class="form-group my-2">
+                    <label asp-for="genero" for="Genero">Gênero:</label>
+                    <select class="form-control form-group" asp-for="genero" data-toggle="tooltip" title="Selecione o gênero do Cliente" id="Genero" name="Genero">
+                        <option value="">------</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                    <span asp-validation-for="genero" class="text-danger"></span>
+                </div>
+
+                <!-- DATA DE NASCIMENTO -->
+                <div class="form-group my-2">
+                    <label asp-for="dataNasc" class="control-label"></label>
+                    <input asp-for="dataNasc" class="form-control" required data-toggle="tooltip" title="Data de nascimento do Cliente" id="DataNascimento" />
+                    <span asp-validation-for="dataNasc" class="text-danger"></span>
+                </div>
+            </div>
+            <!-- Area de Acesso-->
+            <div class="form-group my-2">
+                <label asp-for="password" class="control-label"></label>
+                <input id="password" asp-for="password" class="form-control" data-toggle="tooltip" type="password" required title="Cadastre a senha de acesso do seu Cliente" placeholder="Senha do Cliente" name="password" minlength="8" maxlength="20" />
+                <span asp-validation-for="password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Confirmar Senha:</label>
+                <input id="confirmPassword" type="password" name="confirmPassword" data-toggle="tooltip" required title="Confirme a senha de acesso do seu Cliente" placeholder="Confime a senha do Cliente" class="form-control" minlength="8" maxlength="20" />
+                <span id="passwordError" class="text-danger"></span>
+            </div>
+            <!-- -->
+            <div class="form-group">
+                <a class="btn btn-dark my-2" asp-action="Index">Voltar</a>
+                <input type="submit" value="Cadastrar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    //REQUIRED DO GENERO E DATA DE NASCIMENTO
+    function requiredCampoPessoal() {
+        var tipoPessoa = document.getElementById("tipoPessoa").value;
+        var generoField = document.getElementById("Genero");
+        var dataNascimentoField = document.getElementById("DataNascimento");
+
+        if (tipoPessoa === "F") {
+            generoField.required = true;
+            dataNascimentoField.required = true;
+        } else {
+            generoField.required = false;
+            dataNascimentoField.required = false;
+        }
+    }
+
+    //VERIFICADOR PARA DEIXAR O CAMPO ISENTO SEMPRE READONLY
+    $(document).ready(function () {
+        var inscEstadualInput = $('#inscricaoEstadual');
+
+        verificarIsento(inscEstadualInput.val());
+
+        inscEstadualInput.on('input', function () {
+            var valor = $(this).val();
+            verificarIsento(valor);
+        });
+
+        function verificarIsento(valor) {
+            if (valor === 'ISENTO') {
+                inscEstadualInput.prop('readonly', true);
+            } else {
+                inscEstadualInput.prop('readonly', false);
+            }
+        }
+    });
+    //
+
+    //Script usado para verificar se o campo isento está marcado ao entrar na pagina edit, se estiver a checkbox vai estar marcada se não vai estar vazia
+    $(document).ready(function () {
+        var inscEstadualInput = $('#inscricaoEstadual');
+        var isentoCheckbox = $('#isentoCheckbox');
+
+        // Verifica o valor inicial
+        verificarIsento(inscEstadualInput.val());
+
+        // houve as mudanças do campo
+        inscEstadualInput.on('input', function () {
+            var valor = $(this).val();
+            verificarIsento(valor);
+        });
+
+        // Analise da checkbox
+        isentoCheckbox.on('change', function () {
+            var isChecked = $(this).is(':checked');
+            if (!isChecked) {
+                inscEstadualInput.val('').prop('readonly', false);
+            } else {
+                inscEstadualInput.val('ISENTO').prop('readonly', true);
+            }
+        });
+
+        function verificarIsento(valor) {
+            if (valor === 'ISENTO') {
+                isentoCheckbox.prop('checked', true);
+                inscEstadualInput.prop('readonly', true);
+            } else {
+                isentoCheckbox.prop('checked', false);
+                inscEstadualInput.prop('readonly', false);
+            }
+        }
+    });
+
+    //Eu fiz isso as 22 horas da noite depois de dormir 3 horas, favor checar e adicionar aos outros scripts pra deixar isso decente.
+    $(document).ready(function () {
+        $('#isentoCheckbox, #campoIECheckbox').change(function () {
+            mostrarCampoIsento();
+
+        });
+
+        $('#tipoPessoa').change(function () {
+            mostrarCampoIsento();
+            mostrarCampoPessoal();
+        });
+    });
+
+    //FUNCIONALIDADE ISENTO
+    $(document).ready(function () {
+        $('#isentoCheckbox').change(function () {
+            if ($(this).is(':checked')) {
+                $('#inscricaoEstadual').val('ISENTO');
+                $('#inscricaoEstadual').prop('readonly', true);
+            } else {
+                $('#inscricaoEstadual').val('');
+                $('#inscricaoEstadual').prop('readonly', false);
+            }
+        });
+    });
+
+    //DATE TIME
+    var cadDataInput = document.getElementById('cadDataInput');
+    var currentDate = new Date().toISOString().split('T')[0];
+    cadDataInput.value = currentDate;
+
+    //MENSAGEIRO DO VIEW PARA CONFIRMAÇÃO DA SENHA
+    $(document).ready(function () {
+        $('#confirmPassword').on('input', validatePasswords);
+
+        function validatePasswords() {
+            var password = $('#password').val();
+            var confirmPassword = $(this).val();
+
+            if (password !== confirmPassword) {
+                $('#passwordError').text('As senhas não conferem');
+            } else {
+                $('#passwordError').text('');
+            }
+        }
+    });
+
+    //TOOLTIP
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    //A ideia seria para o edit mas creio que servirá aqui também
+    document.getElementById("campoIECheckbox").addEventListener("change", function () {
+        mostrarCampoIsentoCheckbox();
+
+        var inscricaoEstadual = document.getElementById("inscricaoEstadual");
+        if (inscricaoEstadual.value === "ISENTO") {
+            this.checked = true; // Mantém a checkbox selecionada
+        }
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

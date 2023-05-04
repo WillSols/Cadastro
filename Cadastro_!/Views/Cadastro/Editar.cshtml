@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Editar";
+}
+
+<head>
+
+</head>
+
+<body>
+    <div class="text-center">
+
+        <h1 class="display-4">Edição de Cadastro</h1>
+
+    </div>
+    <div class="container rounded">
+        <form>
+            <!-- Dados Base-->
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- Name -->
+                <div class="form-group my-2">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" placeholder="Razão Social do Cliente" required>
+                </div>
+                <!-- -->
+                <!-- E-mail -->
+                <div class="form-group my-2">
+                    <label for="e-mail">E-mail</label>
+                    <input type="email" class="form-control" placeholder="E-mail do Cliente" required>
+                </div>
+                <!-- -->
+                <!-- Telefone -->
+                <div class="form-group my-2">
+                    <label for="Telefone">Telefone</label>
+                    <input type="text" class="form-control" placeholder="Telefone do Cliente" required>
+                </div>
+                <!-- -->
+                <!-- Data de Cadastro -->
+                <div class="form-group my-2">
+                    <label for="Data">Data de Cadastro</label>
+                    <input type="text" class="form-control" placeholder="Data de Cadastro do Cliente" required>
+                </div>
+                <!-- -->
+            </div>
+            <!-- -->
+            <!-- Dados Base-->
+            <div class="container rounded border border-info my-3 p-3">
+                <!-- Tipo de Pessoa -->
+                <div class="form-group my-2">
+                    <label for="tipoPessoa">Tipo de Pessoa:</label>
+                    <select class="form-group" id="tipoPessoa" name="tipoPessoa" onchange="mostrarCampoIsento()">
+                        <option value="fisica">Pessoa Física</option>
+                        <option value="juridica">Pessoa Jurídica</option>
+                    </select>
+                </div>
+                <!--  -->
+                <!-- CPF/CNPJ -->
+                <div class="form-group my-2">
+                    <label for="CPF/CNPJ">CPF/CNPJ</label>
+                    <input type="text" class="form-control" placeholder="CPF/CNPJ do Cliente" required maxlength="12">
+                </div>
+                <!--  -->
+                <!-- Inscrição Estadual-->
+                <div class="form-group my-2">
+                    <label for="inscricaoEstadual">Inscrição Estadual:</label>
+                    <input type="text" id="inscricaoEstadual" class="form-control" name="inscricaoEstadual" maxlength="12" pattern="\d{3}\.\d{3}\.\d{3}-\d{3}" title="Digite a Inscrição Estadual do CLiente" required />
+                </div>
+
+                <div id="campoIsento" style="display: none;">
+                    <label for="isento">Isento:</label>
+                    <input type="checkbox" id="isento" name="isento" value="true" />
+                </div>
+                <!--  -->
+            </div>
+            <!-- Area de Acesso-->
+            <div class="container rounded border border-info my-3 p-3">
+                <div id="campoBloqueado">
+                    <label for="Bloqueado">Bloqueado:</label>
+                    <input type="checkbox" id="Bloqueado" name="Bloqueado" value="true" />
+                </div>
+
+                <div class="form-group my-2">
+                    <label for="senha">Senha de Acesso:</label>
+                    <input class="form-control" type="password" id="senha" name="senha" minlength="8" maxlength="15" required />
+
+                    <label for="confirmaSenha">Confirmação de Senha:</label>
+                    <input class="form-control" type="password" id="confirmaSenha" name="confirmaSenha" minlength="8" maxlength="15" required />
+
+                    <span id="senhaMsg" style="color: red; display: none;">As senhas não conferem.</span>
+                </div>
+            </div>
+            <!-- -->
+            <button type="submit" class="btn btn-primary"> Alterar </button>
+            <a class="btn btn-secondary btn-block" asp-controller="Cadastro" asp-action="Index" role="button"> Voltar </a>
+        </form>
+    </div>
+    <script>
+        // Toggle Isento
+        function mostrarCampoIsento() {
+            var tipoPessoa = document.getElementById("tipoPessoa").value;
+            var campoIsento = document.getElementById("campoIsento");
+            if (tipoPessoa === "juridica") {
+                campoIsento.style.display = "block";
+            } else {
+                campoIsento.style.display = "none";
+            }
+        }
+
+        // Confirmação Senha
+        var senha = document.getElementById("senha");
+        var confirmaSenha = document.getElementById("confirmaSenha");
+        var senhaMsg = document.getElementById("senhaMsg");
+
+        confirmaSenha.addEventListener("input", function () {
+            if (confirmaSenha.value !== senha.value) {
+                senhaMsg.style.display = "block";
+            } else {
+                senhaMsg.style.display = "none";
+            }
+        });
+    </script>
+</body>
