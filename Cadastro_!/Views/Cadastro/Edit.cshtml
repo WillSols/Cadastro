@@ -197,7 +197,6 @@
         }
     });
 
-    //Eu fiz isso as 22 horas da noite depois de dormir 3 horas, favor checar e adicionar aos outros scripts pra deixar isso decente.
     $(document).ready(function () {
         $('#isentoCheckbox, #campoIECheckbox').change(function () {
             mostrarCampoIsento();
@@ -247,16 +246,6 @@
     //TOOLTIP
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    //A ideia seria para o edit mas creio que servirá aqui também
-    document.getElementById("campoIECheckbox").addEventListener("change", function () {
-        mostrarCampoIsentoCheckbox();
-
-        var inscricaoEstadual = document.getElementById("inscricaoEstadual");
-        if (inscricaoEstadual.value === "ISENTO") {
-            this.checked = true; // Mantém a checkbox selecionada
-        }
     });
 </script>
 @section Scripts {
