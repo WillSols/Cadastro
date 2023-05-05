@@ -37,7 +37,7 @@ ENG
 
 1. Introduction
 
-1. A registration system that operates by the CRUD principle, it receives the necessary information for the register and management of clients both legal entities
+1.1 A registration system that operates by the CRUD principle, it receives the necessary information for the register and management of clients both legal entities
 as individuals.
 
 2. General Informations About the Application
@@ -58,6 +58,7 @@ as individuals.
 3.1.3 Run the application in Visual Studio.
 
 4. Features
+
 4.1 Client Registration, Client Listing using the Datatables jQuery plugin, Client Deletion, and Viewing of Registered Data.
 
 5.Conclusion
