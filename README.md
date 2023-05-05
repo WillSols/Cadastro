@@ -61,4 +61,5 @@ as individuals.
 4.1 Client Registration, Client Listing using the Datatables jQuery plugin, Client Deletion, and Viewing of Registered Data.
 
 5.Conclusion
+
 5.1 In this project, the focus was on a learning and personal development. Its construction is an ongoing process, and it is available for community use.
